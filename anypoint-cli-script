@@ -1,0 +1,49 @@
+# Setup configuration
+anypoint-cli-v4 conf username xxxxxx
+anypoint-cli-v4 conf password yyyyyy
+
+# Design Center
+anypoint-cli-v4 designcenter project upload Shipping API shipping-api-1.0.0-raml.zip --environment=Sandbox
+
+# Deploy backend
+anypoint-cli-v4 help runtime-mgr cloudhub-application deploy # get help documentation
+anypoint-cli-v4 runtime-mgr cloudhub-application deploy shipping-api-timo shipping-api.jar --environment=Sandbox --workerSize 0.1
+anypoint-cli-v4 runtime-mgr cloudhub-application describe shipping-api-timo --environment=Sandbox
+
+# Publish definition to exchange
+anypoint-cli-v4 help exchange
+anypoint-cli-v4 exchange asset upload --name "Shipping SAPI"  --properties={\"mainFile\":\"shipping-api.raml\",\"apiVersion\":\"v1\"} --files={\"raml.zip\":\"shipping-api-1.0.1-raml.zip\"} shipping-api/1.0.0
+anypoint-cli-v4 exchange asset list "Shipping SAPI"
+
+# Publish API
+# e9814672-6850-4d69-b1c4-e277fbd7938d/shipping-api/1.0.0
+anypoint-cli-v4 api-mgr api manage shipping-api 1.0.0 --environment=Sandbox --deploymentType cloudhub --muleVersion4OrAbove --withProxy --scheme=http --type=http --apiInstanceLabel=ShippingProxy --uri=http://shipping-api-timo.us-e2.cloudhub.io --port=8081 --path=/
+# Created new API with ID: 18635354
+# anypoint-cli-v4 api-mgr api deploy 18635334 --environment=Sandbox --applicationName=shipping-api-proxy-timo --gatewayVersion 3.3.0
+
+anypoint-cli-v4 api-mgr api list --environment=Sandbox
+anypoint-cli-v4 api-mgr api describe 18637370 --environment=Sandbox
+anypoint-cli-v4 api-mgr api edit 18637370 --uri https://anypoint.mulesoft.com/mocking/api/v1/links/0c00c442-140d-42f7-afd5-bc746b0297bd --environment=Sandbox
+# Implementation URI         │ https://anypoint.mulesoft.com/mocking/api/v1/links/0c00c442-140d-42f7-afd5-bc746b0297bd
+
+# Policy change
+anypoint-cli-v4 help api-mgr policy
+anypoint-cli-v4 api-mgr policy describe header-injection
+anypoint-cli-v4 api-mgr policy apply 18637370 header-injection --environment=Sandbox
+
+anypoint-cli-v4 api-mgr policy list 18637370 --environment=Sandbox
+
+#
+ ID      Template ID Asset ID         Asset Version Status  Configuration                 Updated
+ ─────── ─────────── ──────────────── ───────────── ─────── ───────────────────────────── ─────────────
+ 3831717 341468      header-injection 1.3.1         Enabled inboundHeaders: [             2 minutes ago
+                                                              {
+                                                                "key": "MS2-Status-Code",
+                                                                "value": "500"
+                                                              }
+                                                            ]
+                                                            outboundHeaders: []
+#
+
+# Change policy
+anypoint-cli-v4 api-mgr policy edit 18637370 3831717 --config={\"inboundHeaders\":[{\"key\":\"MS2-Delay\",\"value\":\"8000\"}]} --environment=Sandbox
