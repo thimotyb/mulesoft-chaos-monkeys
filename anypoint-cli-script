@@ -54,3 +54,5 @@ anypoint-cli-v4 api-mgr policy edit 18637370 3831717 --config={\"inboundHeaders\
 anypoint-cli-v4 api-mgr policy edit 18637370 3831717 --config={\"inboundHeaders\":[{\"key\":\"MS2-Status-Code\",\"value\":\"500\"}]} --environment=Sandbox
 # Jittery Error with Failure Rate 80%
 anypoint-cli-v4 api-mgr policy edit 18637370 3831717 --config={\"inboundHeaders\":[{\"key\":\"MS2-Error-Rate\",\"value\":\"0.80\"},{\"key\":\"MS2-Status-Code\",\"value\":\"200,500\"}]} --environment=Sandbox
+# Delay and Error
+anypoint-cli-v4 api-mgr policy edit 18637370 3831717 --config={\"inboundHeaders\":[{\"key\":\"MS2-Delay\",\"value\":\"600\"},{\"key\":\"MS2-Status-Code\",\"value\":\"500\"}]} --environment=Sandbox
