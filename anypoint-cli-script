@@ -1,6 +1,13 @@
 # Setup configuration
 anypoint-cli-v4 conf username xxxxxx
-anypoint-cli-v4 conf password yyyyyy
+anypoint-cli-v4 conf password yyyy
+
+anypoint-cli-v4 account:user:describe --username thimoty_2022 --password Pass!
+anypoint-cli-v4 runtime-mgr:server:list --username thimoty_2022 --password Pass! --environment Sandbox
+anypoint-cli-v4 runtime-mgr:application:list
+anypoint-cli-v4 runtime-mgr:application:start <APPID>
+anypoint-cli-v4 runtime-mgr:application:stop <APPID>
+anypoint-cli-v4 runtime-mgr:application:logs <APPID>
 
 # Design Center
 anypoint-cli-v4 designcenter project upload Shipping API shipping-api-1.0.0-raml.zip --environment=Sandbox
